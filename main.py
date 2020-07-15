@@ -27,9 +27,10 @@ image_saving_dir = '/home/share_uav/zzh/data/uav_regression/'
 image_saving_path = image_saving_dir + args.image_save_folder
 #  args.ckpt_dir : checkpoint/ucf101/c3d/channel
 args.arch = 'seg_static'
+args.admm = False
+args.masked_retrain = True
 ckpt_name = '{}_{}'.format(args.arch, args.sparsity_type)
 args.ckpt_dir = os.path.join('/home/share_uav/zzh/data/checkpoint', ckpt_name)
-# args.admm 是什么参数？args.resume是是否从断点处开始训练的意思嘛？
 if args.admm and not args.resume and os.path.exists(args.ckpt_dir):
     i = 1
     while os.path.exists(args.ckpt_dir + '_v{}'.format(i)):
@@ -101,10 +102,10 @@ def main():
         model.cuda()
 
     criterion = nn.MSELoss(reduction='sum')
-    # if args.load_from_main_checkpoint:
-    #     chkpt_mainmodel_path = args.load_from_main_checkpoint
-    #     print("Loading ", chkpt_mainmodel_path)
-    #     model.load_state_dict(torch.load(chkpt_mainmodel_path, map_location=device))
+    if args.load_from_main_checkpoint:
+        chkpt_mainmodel_path = args.load_from_main_checkpoint
+        print("Loading ", chkpt_mainmodel_path)
+        model.load_state_dict(torch.load(chkpt_mainmodel_path, map_location=device))
 
     # Observe that all parameters are being optimized
     optimizer_ft = optim.Adam(model.parameters(), lr=args.lr, weight_decay=args.weight_decay)
@@ -222,7 +223,7 @@ def masked_retrain(initial_rho, model, train_loader, test_loader, criterion, opt
         load_path = os.path.join(args.ckpt_dir, '{}_{}.pt'.format(ckpt_name, initial_rho))
         print('>_ Loading model from {}\n'.format(load_path))
     else:
-        load_path = os.path.join(args.ckpt_dir, '{}_{}rhos.pt'.format(ckpt_name, args.rho_num))
+        load_path = os.path.join(args.ckpt_dir, '{}.pt'.format(ckpt_name))
 
     if os.path.exists(load_path):
         checkpoint = torch.load(load_path)
@@ -249,7 +250,8 @@ def masked_retrain(initial_rho, model, train_loader, test_loader, criterion, opt
         for _ in range(len(train_loader)):
             scheduler.step()
 
-    ADMM = admm.ADMM(model, file_name=os.path.join(args.ckpt_dir, args.config_file + '.yaml'), rho=initial_rho)
+    config_path = 'seg_static.yaml'
+    ADMM = admm.ADMM(model, file_name=config_path, rho=initial_rho)
     print('Prune config:')
     for k, v in ADMM.prune_cfg.items():
         print('\t{}: {}'.format(k, v))
@@ -258,7 +260,7 @@ def masked_retrain(initial_rho, model, train_loader, test_loader, criterion, opt
     admm.hard_prune(args, ADMM, model)
     epoch_loss_dict = {}
 
-    save_path = os.path.join(args.ckpt_dir, '{}_{}rhos.pt'.format(ckpt_name, args.rho_num))
+    save_path = os.path.join(args.ckpt_dir, '{}.pt'.format(ckpt_name))
     image_saving_path = image_saving_dir + args.image_save_folder
 
     for epoch in range(start_epoch, args.epochs + 1):
@@ -306,10 +308,12 @@ def train(ADMM, model, train_loader, criterion, optimizer, scheduler, epoch, arg
     if args.masked_retrain or args.combine_progressive:
         masks = {}
         for name, W in model.named_parameters():
+            print(name)
             weight = W.detach()
             non_zeros = weight != 0  # 不为0的parameter是True
             zero_mask = non_zeros.type(torch.float32)  # True被转化为1，False被转化为0， 因此记录下所有为0的parameter的位置
             masks[name] = zero_mask
+        print('this is the content of dict masks', masks)
 
     end = time.time()
     epoch_start_time = time.time()
@@ -337,9 +341,9 @@ def train(ADMM, model, train_loader, criterion, optimizer, scheduler, epoch, arg
 
         if args.admm:
             admm.z_u_update(args, ADMM, model, train_loader, optimizer, epoch, input, k)  # update Z and U variables
-            ce_loss, admm_loss, mixed_loss = admm.append_admm_loss(args, ADMM, model, loss_mse)  # append admm losss
+            loss_mse, admm_loss, mixed_loss = admm.append_admm_loss(args, ADMM, model, loss_mse)  # append admm losss
 
-        losses.update(ce_loss.item(), init.size(0))  # 这里需要注意一下
+        losses.update(loss_mse.item(), init.size(0))  # 这里需要注意一下
 
         # compute gradient and do Adam step
         optimizer.zero_grad()
@@ -347,13 +351,18 @@ def train(ADMM, model, train_loader, criterion, optimizer, scheduler, epoch, arg
         if args.admm:
             mixed_loss.backward()
         else:
-            ce_loss.backward()
+            loss_mse.backward()
 
         if args.masked_retrain or args.combine_progressive:
             with torch.no_grad():
                 for name, W in model.named_parameters():
+                    print(name)
                     if name in masks:
+                        # print('now, print the value of masks[{}]'.format(name), masks[name])
+                        if name == 'module.bn1d_cat_1.weight':
+                            print('W in {module.bn1d_cat_1.weight} is', W)
                         W.grad *= masks[name]  # 将值为0的weight的梯度也清零
+                        print('now, print the value of masks[{}]'.format(name), masks[name])
 
         optimizer.step()
 
@@ -361,7 +370,7 @@ def train(ADMM, model, train_loader, criterion, optimizer, scheduler, epoch, arg
         batch_time.update(time.time() - end)
         end = time.time()
 
-        if k % 10 == 0:
+        if k % 5 == 0:
             for param_group in optimizer.param_groups:
                 current_lr = param_group['lr']
             print('({0}) lr [{1:.6f}]   '
@@ -370,7 +379,7 @@ def train(ADMM, model, train_loader, criterion, optimizer, scheduler, epoch, arg
                   'Time {batch_time.val:.3f} ({batch_time.avg:.3f})   '
                   'Loss {loss.val:.4f} ({loss.avg:.4f})   '
                   .format('Adam', current_lr,
-                          epoch, i, len(train_loader), args.admm, args.masked_retrain, batch_time=batch_time,
+                          epoch, k, len(train_loader), args.admm, args.masked_retrain, batch_time=batch_time,
                           loss=losses))
         if k % 100 == 0:
             idx_loss_dict[k] = losses.avg
