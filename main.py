@@ -131,7 +131,6 @@ def admm_prune(initial_rho, model, train_loader, test_loader, criterion, optimiz
     # initial_rho 默认值为0.0001
     # current_rho 传递给admm中的rho参数
     # 在admm中rho被用来计算每一层的admm_loss
-    # 为什么要进行四次rho的更新？
 
     load_path = '/home/share_uav/zzh/data/uav_regression/check_point/avg_mainFlow_static_2D/avg_mainFlow_static_2D_epoch_1_162.96567006429038'
     print('>_ Loading baseline/progressive model from {}\n'.format(load_path))
@@ -226,7 +225,7 @@ def masked_retrain(initial_rho, model, train_loader, test_loader, criterion, opt
         load_path = os.path.join(args.ckpt_dir, '{}.pt'.format(ckpt_name))
 
     if os.path.exists(load_path):
-        checkpoint = torch.load(load_path)
+        checkpoint = torch.load(load_path, map_location=lambda storage, loc: storage.cuda())
     else:
         exit('Checkpoint does not exist.')
 
@@ -239,7 +238,9 @@ def masked_retrain(initial_rho, model, train_loader, test_loader, criterion, opt
     if args.resume:
         start_epoch = checkpoint['epoch'] + 1
         try:
-            checkpoint = torch.load(load_path.replace('.pt', '_best.pt'), map_location='cpu')
+            # checkpoint = torch.load(load_path.replace('.pt', '_best.pt'), map_location='cpu')
+            checkpoint = torch.load(load_path.replace('.pt', '_best.pt'),
+                                    map_location=lambda storage, loc: storage.cuda())
             best_epoch = checkpoint['epoch']
             best_loss = checkpoint['loss']
         except:
@@ -295,7 +296,6 @@ def train(ADMM, model, train_loader, criterion, optimizer, scheduler, epoch, arg
     batch_time = AverageMeter()
     data_time = AverageMeter()
     losses = AverageMeter()
-    top1 = AverageMeter()
     idx_loss_dict = {}
 
     # switch to train mode
@@ -308,12 +308,10 @@ def train(ADMM, model, train_loader, criterion, optimizer, scheduler, epoch, arg
     if args.masked_retrain or args.combine_progressive:
         masks = {}
         for name, W in model.named_parameters():
-            print(name)
             weight = W.detach()
             non_zeros = weight != 0  # 不为0的parameter是True
             zero_mask = non_zeros.type(torch.float32)  # True被转化为1，False被转化为0， 因此记录下所有为0的parameter的位置
             masks[name] = zero_mask
-        print('this is the content of dict masks', masks)
 
     end = time.time()
     epoch_start_time = time.time()
@@ -343,7 +341,7 @@ def train(ADMM, model, train_loader, criterion, optimizer, scheduler, epoch, arg
             admm.z_u_update(args, ADMM, model, train_loader, optimizer, epoch, input, k)  # update Z and U variables
             loss_mse, admm_loss, mixed_loss = admm.append_admm_loss(args, ADMM, model, loss_mse)  # append admm losss
 
-        losses.update(loss_mse.item(), init.size(0))  # 这里需要注意一下
+        losses.update(loss_mse.item(), init.size(0))
 
         # compute gradient and do Adam step
         optimizer.zero_grad()
@@ -356,13 +354,11 @@ def train(ADMM, model, train_loader, criterion, optimizer, scheduler, epoch, arg
         if args.masked_retrain or args.combine_progressive:
             with torch.no_grad():
                 for name, W in model.named_parameters():
-                    print(name)
                     if name in masks:
-                        # print('now, print the value of masks[{}]'.format(name), masks[name])
-                        if name == 'module.bn1d_cat_1.weight':
-                            print('W in {module.bn1d_cat_1.weight} is', W)
+                        if W.grad is None:
+                            # print('the grad of weight in {} layer is None'.format(name))
+                            continue
                         W.grad *= masks[name]  # 将值为0的weight的梯度也清零
-                        print('now, print the value of masks[{}]'.format(name), masks[name])
 
         optimizer.step()
 
