@@ -283,7 +283,7 @@ def masked_retrain(initial_rho, model, train_loader, test_loader, criterion, opt
             best_loss = loss
             best_epoch = epoch
 
-        print('Best loss@1: {:.3f}%  Best epoch: {}\n'.format(best_loss, best_epoch))
+        print('Best loss@1: {:.3f}  Best epoch: {}\n'.format(best_loss, best_epoch))
 
         epoch_loss_dict[epoch] = idx_loss_dict
         loss_list.append(loss)

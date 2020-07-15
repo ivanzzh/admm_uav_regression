@@ -102,12 +102,9 @@ prune_ratios:
 #    module.convs.2.bn3d_sub_3.running_mean
 #    module.convs.2.bn3d_sub_3.running_var
 #    module.convs.2.bn3d_sub_3.num_batches_tracked
-#    module.convs.3.sub_conv1.weight
-#    module.convs.3.sub_conv1.bias
-#    module.convs.3.sub_conv2.weight
-#    module.convs.3.sub_conv2.bias
-#    module.convs.3.sub_conv3.weight
-#    module.convs.3.sub_conv3.bias
+    module.convs.3.sub_conv1.weight : 0.7
+    module.convs.3.sub_conv2.weight : 0.7
+    module.convs.3.sub_conv3.weight : 0.7
 #    module.convs.3.bn3d_sub_1.weight
 #    module.convs.3.bn3d_sub_1.bias
 #    module.convs.3.bn3d_sub_1.running_mean
@@ -123,12 +120,9 @@ prune_ratios:
 #    module.convs.3.bn3d_sub_3.running_mean
 #    module.convs.3.bn3d_sub_3.running_var
 #    module.convs.3.bn3d_sub_3.num_batches_tracked
-#    module.convs.4.sub_conv1.weight
-#    module.convs.4.sub_conv1.bias
-#    module.convs.4.sub_conv2.weight
-#    module.convs.4.sub_conv2.bias
-#    module.convs.4.sub_conv3.weight
-#    module.convs.4.sub_conv3.bias
+    module.convs.4.sub_conv1.weight : 0.7
+    module.convs.4.sub_conv2.weight : 0.7
+    module.convs.4.sub_conv3.weight : 0.7
 #    module.convs.4.bn3d_sub_1.weight
 #    module.convs.4.bn3d_sub_1.bias
 #    module.convs.4.bn3d_sub_1.running_mean
@@ -144,12 +138,9 @@ prune_ratios:
 #    module.convs.4.bn3d_sub_3.running_mean
 #    module.convs.4.bn3d_sub_3.running_var
 #    module.convs.4.bn3d_sub_3.num_batches_tracked
-#    module.convs.5.sub_conv1.weight
-#    module.convs.5.sub_conv1.bias
-#    module.convs.5.sub_conv2.weight
-#    module.convs.5.sub_conv2.bias
-#    module.convs.5.sub_conv3.weight
-#    module.convs.5.sub_conv3.bias
+    module.convs.5.sub_conv1.weight : 0.7
+    module.convs.5.sub_conv2.weight : 0.7
+    module.convs.5.sub_conv3.weight : 0.7
 #    module.convs.5.bn3d_sub_1.weight
 #    module.convs.5.bn3d_sub_1.bias
 #    module.convs.5.bn3d_sub_1.running_mean
