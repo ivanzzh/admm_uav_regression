@@ -308,11 +308,12 @@ def train(ADMM, model, train_loader, criterion, optimizer, scheduler, epoch, arg
             masks[name] = zero_mask
         print('the rates of Weight equal to 0 in each layer:')
         for layer, W in model.named_parameters():
-            weight = model.state_dict()[layer]
-            zeros = len((abs(weight) == 0).nonzero())
-            weight_size = torch.prod(torch.tensor(weight.shape))
-            print('   {}: {}/{} = {:.4f}'.format(layer.split('module.')[-1], zeros, weight_size,
-                                                 float(zeros) / float(weight_size)))
+            if layer in ADMM.prune_cfg.keys():
+                weight = model.state_dict()[layer]
+                zeros = len((abs(weight) == 0).nonzero())
+                weight_size = torch.prod(torch.tensor(weight.shape))
+                print('   {}: {}/{} = {:.4f}'.format(layer.split('module.')[-1], zeros, weight_size,
+                                                     float(zeros) / float(weight_size)))
         print('')
 
 
