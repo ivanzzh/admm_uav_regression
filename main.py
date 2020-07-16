@@ -25,10 +25,9 @@ from options import parser
 args = parser.parse_args()
 image_saving_dir = '/home/share_uav/zzh/data/uav_regression/'
 image_saving_path = image_saving_dir + args.image_save_folder
-#  args.ckpt_dir : checkpoint/ucf101/c3d/channel
 args.arch = 'seg_static'
-args.admm = False
-args.masked_retrain = True
+args.admm = True
+args.masked_retrain = False
 ckpt_name = '{}_{}'.format(args.arch, args.sparsity_type)
 args.ckpt_dir = os.path.join('/home/share_uav/zzh/data/checkpoint', ckpt_name)
 if args.admm and not args.resume and os.path.exists(args.ckpt_dir):
@@ -199,12 +198,7 @@ def admm_prune(initial_rho, model, train_loader, test_loader, criterion, optimiz
 
         if args.sparsity_type != 'blkcir' and ((epoch - 1) % args.admm_epochs == 0 or epoch == args.epochs):
             print('Weight < 1e-4:')
-            prune_cfg = ADMM.prune_cfg
-            # for name in model.state_dict():
-            #     # if name not in prune_cfg:
-            #     #     continue
-            #     print(name)
-            for layer in prune_cfg.keys():
+            for layer in ADMM.prune_cfg.keys():
                 weight = model.state_dict()[layer]
                 zeros = len((abs(weight) < 1e-4).nonzero())
                 weight_size = torch.prod(torch.tensor(weight.shape))
@@ -312,6 +306,15 @@ def train(ADMM, model, train_loader, criterion, optimizer, scheduler, epoch, arg
             non_zeros = weight != 0  # 不为0的parameter是True
             zero_mask = non_zeros.type(torch.float32)  # True被转化为1，False被转化为0， 因此记录下所有为0的parameter的位置
             masks[name] = zero_mask
+        print('the rates of Weight equal to 0 in each layer:')
+        for layer, W in model.named_parameters():
+            weight = model.state_dict()[layer]
+            zeros = len((abs(weight) == 0).nonzero())
+            weight_size = torch.prod(torch.tensor(weight.shape))
+            print('   {}: {}/{} = {:.4f}'.format(layer.split('module.')[-1], zeros, weight_size,
+                                                 float(zeros) / float(weight_size)))
+        print('')
+
 
     end = time.time()
     epoch_start_time = time.time()

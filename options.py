@@ -20,17 +20,13 @@ parser.add_argument('--arch', type=str, default='r2+1d',
                     help='[c3d, r2+1d, s3d, mf3d]')
 parser.add_argument('--batch-size', type=int, default=32, metavar='N',
                     help='input batch size for training (default: 64)')
-parser.add_argument('--epochs', type=int, default=100, metavar='N',
+parser.add_argument('--epochs', type=int, default=40, metavar='N',
                     help='number of epochs to train (default: 100)')
-parser.add_argument('--admm-epochs', type=int, default=2, metavar='N',
+parser.add_argument('--admm-epochs', type=int, default=5, metavar='N',
                     help='number of interval epochs to update admm (default: 10)')
 
-# parser.add_argument('--lr', type=float, default=0.001, metavar='LR',
-#                     help='learning rate (default: 0.1)')
 parser.add_argument('--lr-decay', type=int, default=30, metavar='LR_decay',
                     help='how many every epoch before lr drop (default: 30)')
-# parser.add_argument('--momentum', type=float, default=0.9, metavar='M',
-#                     help='SGD momentum (default: 0.9)')
 parser.add_argument('--weight-decay', '--wd', default=5e-4, type=float,
                     metavar='W', help='weight decay (default: 5e-4)')
 
