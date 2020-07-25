@@ -1,0 +1,160 @@
+prune_ratios:
+#    module.bn2d_main_1.weight
+#    module.bn2d_main_1.bias
+#    module.bn2d_main_1.running_mean
+#    module.bn2d_main_1.running_var
+#    module.bn2d_main_1.num_batches_tracked
+#    module.bn2d_main_2.weight
+#    module.bn2d_main_2.bias
+#    module.bn2d_main_2.running_mean
+#    module.bn2d_main_2.running_var
+#    module.bn2d_main_2.num_batches_tracked
+#    module.bn2d_main_3.weight
+#    module.bn2d_main_3.bias
+#    module.bn2d_main_3.running_mean
+#    module.bn2d_main_3.running_var
+#    module.bn2d_main_3.num_batches_tracked
+#    module.bn2d_dev_1.weight
+#    module.bn2d_dev_1.bias
+#    module.bn2d_dev_1.running_mean
+#    module.bn2d_dev_1.running_var
+#    module.bn2d_dev_1.num_batches_tracked
+#    module.bn2d_dev_2.weight
+#    module.bn2d_dev_2.bias
+#    module.bn2d_dev_2.running_mean
+#    module.bn2d_dev_2.running_var
+#    module.bn2d_dev_2.num_batches_tracked
+#    module.bn2d_dev_3.weight
+#    module.bn2d_dev_3.bias
+#    module.bn2d_dev_3.running_mean
+#    module.bn2d_dev_3.running_var
+#    module.bn2d_dev_3.num_batches_tracked
+#    module.bn1d_cat_1.weight
+#    module.bn1d_cat_1.bias
+#    module.bn1d_cat_1.running_mean
+#    module.bn1d_cat_1.running_var
+#    module.bn1d_cat_1.num_batches_tracked
+#    module.main_conv1.weight
+#    module.main_conv1.bias
+#    module.main_conv2.weight
+#    module.main_conv2.bias
+#    module.main_conv3.weight
+#    module.main_conv3.bias
+#    module.deconv1.weight
+#    module.deconv1.bias
+#    module.deconv2.weight
+#    module.deconv2.bias
+#    module.deconv3.weight
+#    module.deconv3.bias
+#    module.deconv4.weight
+#    module.deconv4.bias
+    module.convs.0.sub_conv1.weight: 0.3
+    module.convs.0.sub_conv2.weight: 0.6
+    module.convs.0.sub_conv3.weight: 0.7
+#    module.convs.0.bn3d_sub_1.weight
+#    module.convs.0.bn3d_sub_1.bias
+#    module.convs.0.bn3d_sub_1.running_mean
+#    module.convs.0.bn3d_sub_1.running_var
+#    module.convs.0.bn3d_sub_1.num_batches_tracked
+#    module.convs.0.bn3d_sub_2.weight
+#    module.convs.0.bn3d_sub_2.bias
+#    module.convs.0.bn3d_sub_2.running_mean
+#    module.convs.0.bn3d_sub_2.running_var
+#    module.convs.0.bn3d_sub_2.num_batches_tracked
+#    module.convs.0.bn3d_sub_3.weight
+#    module.convs.0.bn3d_sub_3.bias
+#    module.convs.0.bn3d_sub_3.running_mean
+#    module.convs.0.bn3d_sub_3.running_var
+#    module.convs.0.bn3d_sub_3.num_batches_tracked
+    module.convs.1.sub_conv1.weight : 0.4
+    module.convs.1.sub_conv2.weight : 0.7
+    module.convs.1.sub_conv3.weight : 0.8
+#    module.convs.1.bn3d_sub_1.weight
+#    module.convs.1.bn3d_sub_1.bias
+#    module.convs.1.bn3d_sub_1.running_mean
+#    module.convs.1.bn3d_sub_1.running_var
+#    module.convs.1.bn3d_sub_1.num_batches_tracked
+#    module.convs.1.bn3d_sub_2.weight
+#    module.convs.1.bn3d_sub_2.bias
+#    module.convs.1.bn3d_sub_2.running_mean
+#    module.convs.1.bn3d_sub_2.running_var
+#    module.convs.1.bn3d_sub_2.num_batches_tracked
+#    module.convs.1.bn3d_sub_3.weight
+#    module.convs.1.bn3d_sub_3.bias
+#    module.convs.1.bn3d_sub_3.running_mean
+#    module.convs.1.bn3d_sub_3.running_var
+#    module.convs.1.bn3d_sub_3.num_batches_tracked
+    module.convs.2.sub_conv1.weight : 0.5
+    module.convs.2.sub_conv2.weight : 0.8
+    module.convs.2.sub_conv3.weight : 0.9
+#    module.convs.2.bn3d_sub_1.weight
+#    module.convs.2.bn3d_sub_1.bias
+#    module.convs.2.bn3d_sub_1.running_mean
+#    module.convs.2.bn3d_sub_1.running_var
+#    module.convs.2.bn3d_sub_1.num_batches_tracked
+#    module.convs.2.bn3d_sub_2.weight
+#    module.convs.2.bn3d_sub_2.bias
+#    module.convs.2.bn3d_sub_2.running_mean
+#    module.convs.2.bn3d_sub_2.running_var
+#    module.convs.2.bn3d_sub_2.num_batches_tracked
+#    module.convs.2.bn3d_sub_3.weight
+#    module.convs.2.bn3d_sub_3.bias
+#    module.convs.2.bn3d_sub_3.running_mean
+#    module.convs.2.bn3d_sub_3.running_var
+#    module.convs.2.bn3d_sub_3.num_batches_tracked
+    module.convs.3.sub_conv1.weight : 0.5
+    module.convs.3.sub_conv2.weight : 0.8
+    module.convs.3.sub_conv3.weight : 0.9
+#    module.convs.3.bn3d_sub_1.weight
+#    module.convs.3.bn3d_sub_1.bias
+#    module.convs.3.bn3d_sub_1.running_mean
+#    module.convs.3.bn3d_sub_1.running_var
+#    module.convs.3.bn3d_sub_1.num_batches_tracked
+#    module.convs.3.bn3d_sub_2.weight
+#    module.convs.3.bn3d_sub_2.bias
+#    module.convs.3.bn3d_sub_2.running_mean
+#    module.convs.3.bn3d_sub_2.running_var
+#    module.convs.3.bn3d_sub_2.num_batches_tracked
+#    module.convs.3.bn3d_sub_3.weight
+#    module.convs.3.bn3d_sub_3.bias
+#    module.convs.3.bn3d_sub_3.running_mean
+#    module.convs.3.bn3d_sub_3.running_var
+#    module.convs.3.bn3d_sub_3.num_batches_tracked
+    module.convs.4.sub_conv1.weight : 0.4
+    module.convs.4.sub_conv2.weight : 0.7
+    module.convs.4.sub_conv3.weight : 0.8
+#    module.convs.4.bn3d_sub_1.weight
+#    module.convs.4.bn3d_sub_1.bias
+#    module.convs.4.bn3d_sub_1.running_mean
+#    module.convs.4.bn3d_sub_1.running_var
+#    module.convs.4.bn3d_sub_1.num_batches_tracked
+#    module.convs.4.bn3d_sub_2.weight
+#    module.convs.4.bn3d_sub_2.bias
+#    module.convs.4.bn3d_sub_2.running_mean
+#    module.convs.4.bn3d_sub_2.running_var
+#    module.convs.4.bn3d_sub_2.num_batches_tracked
+#    module.convs.4.bn3d_sub_3.weight
+#    module.convs.4.bn3d_sub_3.bias
+#    module.convs.4.bn3d_sub_3.running_mean
+#    module.convs.4.bn3d_sub_3.running_var
+#    module.convs.4.bn3d_sub_3.num_batches_tracked
+    module.convs.5.sub_conv1.weight : 0.3
+    module.convs.5.sub_conv2.weight : 0.6
+    module.convs.5.sub_conv3.weight : 0.7
+#    module.convs.5.bn3d_sub_1.weight
+#    module.convs.5.bn3d_sub_1.bias
+#    module.convs.5.bn3d_sub_1.running_mean
+#    module.convs.5.bn3d_sub_1.running_var
+#    module.convs.5.bn3d_sub_1.num_batches_tracked
+#    module.convs.5.bn3d_sub_2.weight
+#    module.convs.5.bn3d_sub_2.bias
+#    module.convs.5.bn3d_sub_2.running_mean
+#    module.convs.5.bn3d_sub_2.running_var
+#    module.convs.5.bn3d_sub_2.num_batches_tracked
+#    module.convs.5.bn3d_sub_3.weight
+#    module.convs.5.bn3d_sub_3.bias
+#    module.convs.5.bn3d_sub_3.running_mean
+#    module.convs.5.bn3d_sub_3.running_var
+#    module.convs.5.bn3d_sub_3.num_batches_tracked
+#    module.cat_bn.weight
+#    module.cat_bn.bias
